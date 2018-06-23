@@ -8,6 +8,7 @@ const router = express.Router();
 //================================== GET All POSTS ====================>
 router.get('/post', (req,res,next) => {
 
+
   const {user} = req.query;
 
   const query = {};
@@ -28,6 +29,7 @@ router.get('/post', (req,res,next) => {
 //================================== Create New Post ====================>
 
 router.post('/post', (req,res,next) => {
+  console.log(req.body);
   const acceptedFields = ['author','body','tags','title'];
   const newPost = {};
   let runningErr;
@@ -43,15 +45,21 @@ router.post('/post', (req,res,next) => {
     newPost[field] = req.body[field];
   });
 
+  console.log(runningErr);
+  
   if (runningErr) {
     return next(runningErr);
   }
 
   Post.create(newPost)
     .then(response => {
+      console.log('created');
       res.json(response);
     })
-    .catch(next);
+    .catch(err => {
+      console.log(err);
+      next(err);
+    });
   
 });
 
